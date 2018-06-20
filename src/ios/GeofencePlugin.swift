@@ -230,9 +230,9 @@ class GeoNotificationManager : NSObject, CLLocationManagerDelegate {
 
     override init() {
         log("GeoNotificationManager init")
-        super.init()
         self.userLat = 0.0
         self.userLng = 0.0
+        super.init()
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
     }
