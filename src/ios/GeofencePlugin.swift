@@ -411,8 +411,6 @@ class GeoNotificationManager : NSObject, CLLocationManagerDelegate {
             geoNotification["current_time"] = JSON(Date().timeIntervalSince1970)
 
             let jsonData = try? geoNotification.rawData()
-            let stringData = geoNotification.rawString()
-            log(stringData!)
 
             let url = URL(string: geoNotification["url"].stringValue)!
             var request = URLRequest(url: url)
@@ -421,6 +419,12 @@ class GeoNotificationManager : NSObject, CLLocationManagerDelegate {
 
             request.setValue("Accept", forHTTPHeaderField: "Content-Type")
             request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
+
+            if geoNotification["headers"].isExists() {
+                for header in geoNotification["headers"] {
+                    request.setValue(header.1.stringValue, forHTTPHeaderField: header.0)
+                }
+            }
 
             let task = URLSession.shared.dataTask(with: request) {
                 data, response, error in
@@ -433,7 +437,6 @@ class GeoNotificationManager : NSObject, CLLocationManagerDelegate {
 
                 do {
                     let result = try JSON(data: data!);
-
                     print("Result -> \(result.rawString())")
                 } catch {
                     print("Error -> \(error)")
